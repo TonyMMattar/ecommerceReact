@@ -4,7 +4,9 @@ import { Button } from '@mui/material';
 import EditItemDialog from './EditItemDialog';
 import { useNavigate } from "react-router-dom";
 
+// Component for displaying the home page with product list
 function Home() {
+  // State variables for rows, edit dialog open state, selected row, total rows count, and pagination model
   const [rows, setRows] = useState([]);
   const [editOpen, setEditOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -16,13 +18,16 @@ function Home() {
     page: 0,
   });
 
+  // Effect hook to check authentication and fetch data on pagination change
   useEffect(() => { 
         if(!token){
+          // Redirect to login page if token is not available
             navigate('/login')
         }
     fetchData();
   }, [paginationModel]);
 
+  // Function to fetch data from the backend
   const fetchData = async () => {
     try {
         const skip = (paginationModel.page) * paginationModel.pageSize;
@@ -46,16 +51,20 @@ function Home() {
     }
   };
 
+  // Function to open edit dialog
   const handleEditOpen = (row) => {
     setSelectedRow(row);
     setEditOpen(true);
   };
 
+  // Function to close edit dialog
   const handleEditClose = () => {
     setSelectedRow(null);
     setEditOpen(false);
   };
 
+  // Function to save/create new/edited item
+  // If the item doesn't have an Id we must call the POST Method in order to create a new product, else we update the selected one
   const handleEditSave = async (editedItem) => {
     try {
       const response = await fetch(`https://localhost:44331/api/product`, {
@@ -76,16 +85,20 @@ function Home() {
     }
   };
 
+  // Function to handle creating a new product
   const handleCreateNewProduct = () => {
     setSelectedRow({});
     setEditOpen(true);
   };
 
+  // Function to handle user logout
+  // We must remove the token on logout so the user can't go back
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate('/login')
-}
+  }
 
+  // Columns configuration for DataGrid
   const columns = [ 
     /* { field: 'id', headerName: 'ID', width: 100 }, */
     { field: 'name', headerName: 'Name', width: 200 },

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom"
 import './Login.css';
 
+// Component for handling user login
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -13,6 +14,7 @@ function Login() {
       e.preventDefault();
   
       try {
+        // Sending login credentials to the backend
         const response = await fetch('https://localhost:44331/api/login', {
           method: 'POST',
           headers: {
@@ -21,16 +23,22 @@ function Login() {
           body: JSON.stringify({ email, password }),
         });
   
+        // If login is successful
         if (response.ok) {
           console.log('Login successful');
 
+          // Extracting token from response data
           const data = await response.json();
           const token = data.token;
+
+          // Storing token in local storage
           localStorage.setItem("token", token);
+
+          // Redirecting user to home page
           navigate('/home')
     
         } else {
-          // Handle login error
+          // If login fails, handle the error
           console.error('Login failed');
           setError('Invalid email or password');
         }
