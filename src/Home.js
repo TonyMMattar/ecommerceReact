@@ -16,7 +16,7 @@ function Home() {
     page: 0,
   });
 
-  useEffect(() => {
+  useEffect(() => { 
         if(!token){
             navigate('/login')
         }
